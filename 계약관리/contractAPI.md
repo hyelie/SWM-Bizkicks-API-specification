@@ -185,39 +185,40 @@ Note:
 
 <br>
 
-### 4) 계약 조회 - 현재 계약 종류, 종료 기간, 계약 중인 킥보드 업체 목록 및 요약정보
+### 4) 계약 조회 - 현재 계약 종류, 종료 기간, 계약 중인 킥보드 업체 목록 및 요약정보 - membership
 
-`/manage/contracts`
+`/manage/contracts/membership`
 
 Method : **GET**
 
-Description : 클라이언트가 해당 API를 호출하면 서버에서 헤더에 있는 아이디가 관리자 아이디인지 유효성 검사를 진행한 후 해당 고객 법인의 계약 종류, 종료 기간, 계약중인 킥보드 업체 및 요약정보를 리턴
+Description : 클라이언트가 해당 API를 호출하면 서버에서 헤더에 있는 아이디가 관리자 아이디인지 유효성 검사를 진행한 후 해당 고객 법인의 계약 종류, 종료 기간, 계약중인 킥보드 업체 및 멤버십 계약정보 리턴
 
 Request : 사용자의 정보가 담긴 Authorization header를 전송함.
 
-Response : 성공 시 고객 법인의 계약 종류, 종료 기간, 계약중인 킥보드 업체 목록 및 요약정보 리턴. 실패 시 실패 사유를 메시지로 리턴.
+Response : 성공 시 고객 법인의 계약 종류, 시작 날짜, 종료 날짜, 사용한 시간, 계약중인 킥보드 업체 목록 및 요약정보 리턴. 실패 시 실패 사유를 메시지로 리턴.
 
 Response example)
 
 ```json
 HTTP/1.1 200 OK
 {
-  "type" : "measuredRate" (string) | "fixedCharge" (string),
-  "duedate" : "2020-12-31" (date)
+  "type" : "membership" (string),
+  "startdate" : "2020-12-31" (date),
+  "duedate" : "2020-12-31" (date),
   "list" : [
 		{
 			"company_name" : "씽씽" (string),
-			"price_per_hour" : 10000 (number),
 			"service_location" : ["관악구", "서초구", "강남구"] (string list),
 			"insurance" : true (boolean),
-			"helmet" : false (boolean)
+			"helmet" : false (boolean),
+			"used_time" : 123 (number)
 		},
 		{
 			"company_name" : "킥고잉" (string),
-			"price_per_hour" : 12000 (number),
 			"service_location" : ["금천구", "강북구", "강서구"] (string list),
 			"insurance" : false (boolean),
-			"helmet" : true (boolean)
+			"helmet" : true (boolean),
+			"used_time" : 123 (number)
 		},
 		...
   ] (json list)
@@ -244,9 +245,9 @@ HTTP/1.1 403 Forbidden
 
 Validation:
 
-- type : 계약 타입. "measuredRate" 또는 "fixedCharge" 2개 값 중 하나임.
+- type : "membership" 
 - duedate : YYYY-MM-DD (date)
-- list : 계약된 킥보드 회사 목록. type이 measuredRate인 경우 list는 null, fixedCharge인 경우에는각 element는 회사명, 시간당 금액, 서비스 지역, 보험 제공 여부, 헬멧 제공 여부를 가지고 있음.
+- list : 계약된 킥보드 회사 목록. element는 회사명, 시간당 금액, 서비스 지역, 보험 제공 여부, 헬멧 제공 여부, 사용시간을 가지고 있음.
 
 Returns:
 
@@ -260,24 +261,104 @@ Note:
 
 <br>
 
-### 5) 계약 추가
+### 5) 계약 조회 - 현재 계약 종류, 종료 기간, 계약 중인 킥보드 업체 목록 및 요약정보 - plan
 
-`/manage/contracts`
+`/manage/contracts/plan`
+
+Method : **GET**
+
+Description : 클라이언트가 해당 API를 호출하면 서버에서 헤더에 있는 아이디가 관리자 아이디인지 유효성 검사를 진행한 후 해당 고객 법인의 계약 종류, 사용시간, 전체시간, 계약중인 킥보드 업체 및 플랜 계약정보 리턴
+
+Request : 사용자의 정보가 담긴 Authorization header를 전송함.
+
+Response : 성공 시 고객 법인의 계약 종류, 시작 날짜, 전체시간, 사용한 시간, 계약중인 킥보드 업체 목록 및 요약정보 리턴. 실패 시 실패 사유를 메시지로 리턴.
+
+Response example)
+
+```json
+HTTP/1.1 200 OK
+{
+  "type" : "plan" (string),
+  "startdate" : "2020-12-31" (date),
+  "list" : [
+		{
+			"company_name" : "씽씽" (string),
+			"price_per_hour" : 12000 (number),
+			"service_location" : ["관악구", "서초구", "강남구"] (string list),
+			"insurance" : true (boolean),
+			"helmet" : false (boolean),
+			"used_time" : 123 (number),
+			"total_time" : 123(number)
+		},
+		{
+			"company_name" : "킥고잉" (string),
+			"price_per_hour" : 10000 (number),
+			"service_location" : ["금천구", "강북구", "강서구"] (string list),
+			"insurance" : false (boolean),
+			"helmet" : true (boolean),
+			"used_time" : 123 (number),
+			"total_time" : 123(number)
+		},
+		...
+  ] (json list)
+}
+
+HTTP/1.1 401 Unauthorized
+{
+	"timestamp": "2021-08-09T21:48:32.9523621" (datetime),
+	"status": 401 (number),
+	"error": "UNAUTHORIZED" (string),
+	"code": "USER_STATUS_LOGOUT" (string),
+	"msg": "사용자가 로그아웃 상태입니다." (string)
+}
+
+HTTP/1.1 403 Forbidden
+{
+	"timestamp": "2021-08-09T21:50:40.2363793" (datetime),
+	"status": 403 (number),
+	"error": "FORBIDDEN" (string),
+	"code": "NOT_ALLOWED" (string),
+	"msg": "허가되지 않은 접근입니다." (string)
+}
+```
+
+Validation:
+
+- type : "plan" 
+- duedate : YYYY-MM-DD (date)
+- list : 계약된 킥보드 회사 목록. element는 회사명, 시간당 금액, 서비스 지역, 보험 제공 여부, 헬멧 제공 여부, 사용시간, 업체별 전체시간을 가지고 있음.
+
+Returns:
+
+- 200 OK (Success)
+- 401 Unauthorized (user status logout)
+- 403 Forbidden (Not allowed)
+
+Note:
+
+- 헤더에 명시된 사용자가 "관리자"여야만 요청할 수 있음.
+
+
+<br>
+
+### 6) 계약 추가 - membership
+
+`/manage/contracts/membership`
 
 Method : **POST**
 
-Description : 클라이언트가 계약 종류, 계약할 킥보드 회사 목록, 계약 기간을 전송하면 서버에서 헤더에 있는 아이디가 관리자 아이디인지 유효성 검사를 진행한 후 해당 고객 법인의 계약 정보를 남김.
+Description : 클라이언트가 계약 종류, 계약 시작날짜, 종료날짜를 전송하면 서버에서 헤더에 있는 아이디가 관리자 아이디인지 유효성 검사를 진행한 후 해당 고객 법인의 계약 정보를 남김.
 
-Request : 사용자의 정보가 담긴 Authorization header, 계약 종류, 킥보드 업체 이름 목록, 계약 기간을 POST로 전송함.
+Request : 사용자의 정보가 담긴 Authorization header, 계약 종류, 계약시작날짜, 계약종료날짜를 POST로 전송함.
 
 Request example)
 
 ```json
 http body
 {
-  "type" : "measuredRate" (string) | "fixedCharge" (string),
-  "company_list" : ["씽씽", "킥고잉", ... ] (string list),
+  "type" : "membership" (string),
   "duedate" : "2020-12-31" (datetime),
+  "startdate" : "2020-12-31" (datetime)
 }
 ```
 
@@ -312,9 +393,8 @@ HTTP/1.1 403 Forbidden
 
 Validation:
 
-- type : 계약 타입. "measuredRate" 또는 "fixedCharge" 2개 값 중 하나임.
+- type : 계약 타입. "membership"
 - date : YYYY-MM-DD
-- commany_list : 계약할 킥보드 회사 목록. type이 measuredRate인 경우 list는 null, fixedCharge인 경우에는 각 회사명 list임.
 
 Returns:
 
@@ -328,13 +408,91 @@ Note:
 
 <br>
 
-### 6) 계약 갱신
+### 7) 계약 추가 - plan
 
-`/manage/contracts`
+`/manage/contracts/plan`
+
+Method : **POST**
+
+Description : 클라이언트가 계약 종류, 계약 시작날짜, 업체목록, 업체별 구매시간을 전송하면 서버에서 헤더에 있는 아이디가 관리자 아이디인지 유효성 검사를 진행한 후 해당 고객 법인의 계약 정보를 남김.
+
+Request : 사용자의 정보가 담긴 Authorization header, 계약 종류, 킥보드 업체 이름 목록, 계약 기간을 POST로 전송함.
+
+Request example)
+
+```json
+http body
+{
+  "type" : "plan" (string),
+  "startdate" : "2020-12-31" (datetime),
+  "list" : [
+	  {
+		"brandname" : "씽씽" (string),
+		"totaltime" : 30 (number),
+	  },
+	  {
+		"brandname" : "지쿠터" (string),
+		"totaltime" : 40 (number),
+	  }
+	  ...
+  ]
+}
+```
+
+Response : 통신 결과 및 메시지 리턴.
+
+Response example)
+
+```json
+HTTP/1.1 201 Created
+{
+	"msg" : "Success" (string)
+}
+
+HTTP/1.1 401 Unauthorized
+{
+	"timestamp": "2021-08-09T21:48:32.9523621" (datetime),
+	"status": 401 (number),
+	"error": "UNAUTHORIZED" (string),
+	"code": "USER_STATUS_LOGOUT" (string),
+	"msg": "사용자가 로그아웃 상태입니다." (string)
+}
+
+HTTP/1.1 403 Forbidden
+{
+	"timestamp": "2021-08-09T21:50:40.2363793" (datetime),
+	"status": 403 (number),
+	"error": "FORBIDDEN" (string),
+	"code": "NOT_ALLOWED" (string),
+	"msg": "허가되지 않은 접근입니다." (string)
+}
+```
+
+Validation:
+
+- type : 계약 타입. "plan" 
+- date : YYYY-MM-DD
+- list : 계약할 킥보드 회사 목록, 업체별 구매시간
+
+Returns:
+
+- 200 OK (Success)
+- 401 Unauthorized (user status logout)
+- 403 Forbidden (Not allowed)
+
+Note:
+
+- 헤더에 명시된 사용자가 "관리자"여야만 요청할 수 있음.
+
+<br>
+
+### 8) 계약 갱신 - membership
+
+`/manage/contracts/membership`
 
 Method : **PUT**
 
-Description : 클라이언트가 계약 종류, 계약할 킥보드 회사 목록, 계약 기간을 전송하면 서버에서 헤더에 있는 아이디가 관리자 아이디인지 유효성 검사를 진행한 후 해당 고객 법인의 계약 정보를 갱신함.
+Description : 클라이언트가 계약 종류, 계약 시작날짜, 계약 종료날짜를 전송하면 서버에서 헤더에 있는 아이디가 관리자 아이디인지 유효성 검사를 진행한 후 해당 고객 법인의 계약 정보를 갱신함.
 
 Request : 사용자의 정보가 담긴 Authorization header, 계약 종류, 킥보드 업체 이름 목록, 계약 기간을 PUT로 전송함.
 
@@ -343,8 +501,8 @@ Request example)
 ```json
 http body
 {
-  "type" : "measuredRate" (string) | "fixedCharge" (string),
-  "company_list" : ["씽씽", "킥고잉", ... ] (string list),
+  "type" : "membership" (string),
+  "startdate" : "2020-12-31" (date),
   "duedate" : "2020-12-31" (date)
 }
 ```
@@ -380,9 +538,8 @@ HTTP/1.1 403 Forbidden
 
 Validation:
 
-- type : 계약 타입. "measuredRate" 또는 "fixedCharge" 2개 값 중 하나임.
+- type : 계약 타입. "membership"
 - date : YYYY-MM-DD (date)
-- commany_list : 계약할 킥보드 회사 목록. type이 measuredRate인 경우 list는 null, fixedCharge인 경우에는 각 회사명 list임.
 
 Returns:
 
@@ -397,9 +554,86 @@ Note:
 
 <br>
 
-### 7) 계약 삭제
+### 9) 계약 갱신 - plan
 
-`/manage/contracts`
+`/manage/contracts/plan`
+
+Method : **PUT**
+
+Description : 클라이언트가 계약 종류, 계약 시작날짜, 회사목록, 업체별 구매시간을 전송하면 서버에서 헤더에 있는 아이디가 관리자 아이디인지 유효성 검사를 진행한 후 해당 고객 법인의 계약 정보를 갱신함.
+
+Request : 사용자의 정보가 담긴 Authorization header, 계약 종류, 킥보드 업체 이름 목록, 계약 시작날짜를 PUT로 전송함.
+
+Request example)
+
+```json
+http body
+{
+  "type" : "plan" (string),
+  "list" : [
+	  {
+		  "brandname" : "씽씽" (string),
+		  "totaltime" : 123 (number)
+	  },
+	  {
+		  "brandname" : "지쿠터" (string),
+		  "totaltime" : 123 (number)
+	  }
+	  ...
+  ]
+}
+```
+
+Response : 통신 결과 및 메시지 리턴.
+
+Response example)
+
+```json
+HTTP/1.1 200 OK
+{
+	"msg" : "Success" (string)
+}
+
+HTTP/1.1 401 Unauthorized
+{
+	"timestamp": "2021-08-09T21:48:32.9523621" (datetime),
+	"status": 401 (number),
+	"error": "UNAUTHORIZED" (string),
+	"code": "USER_STATUS_LOGOUT" (string),
+	"msg": "사용자가 로그아웃 상태입니다." (string)
+}
+
+HTTP/1.1 403 Forbidden
+{
+	"timestamp": "2021-08-09T21:50:40.2363793" (datetime),
+	"status": 403 (number),
+	"error": "FORBIDDEN" (string),
+	"code": "NOT_ALLOWED" (string),
+	"msg": "허가되지 않은 접근입니다." (string)
+}
+```
+
+Validation:
+
+- type : 계약 타입. "plan"
+- list : 브랜드 이름, 업체별구매시간
+
+Returns:
+
+- 200 OK (Success)
+- 401 Unauthorized (user status logout)
+- 403 Forbidden (Not allowed)
+
+Note:
+
+- 헤더에 명시된 사용자가 "관리자"여야만 요청할 수 있음.
+- 고객 법인의 계약된 킥보드 법인 중 일부 킥보드 법인을 삭제/추가하는 경우 해당 API를 이용.
+
+<br>
+
+### 10) 계약 삭제 - membership
+
+`/manage/contracts/membership`
 
 Method : **DELETE**
 
@@ -445,7 +679,61 @@ Note:
 
 <br>
 
-### 8) 알림 확인
+### 11) 계약 삭제 - plan
+
+`/manage/contracts/plan`
+
+Method : **DELETE**
+
+Description : 클라이언트가 해당 API를 호출하면 서버에서 관리자 아이디인지 유효성 검사를 진행한 후 해당 고객 법인이 요청한 업체들과 계약을 해지함.
+
+Request : 사용자의 정보가 담긴 Authorization header을 전송하고 계약을 해지할 브랜드 이름을 리스트로 전송.
+
+Response : 통신 결과 및 메시지 리턴.
+
+Response example)
+
+```json
+http body
+{
+  "list" : ["씽씽", "지쿠터", ...]
+}
+```
+
+
+HTTP/1.1 204 No Content
+
+HTTP/1.1 401 Unauthorized
+{
+	"timestamp": "2021-08-09T21:48:32.9523621" (datetime),
+	"status": 401 (number),
+	"error": "UNAUTHORIZED" (string),
+	"code": "USER_STATUS_LOGOUT" (string),
+	"msg": "사용자가 로그아웃 상태입니다." (string)
+}
+
+HTTP/1.1 403 Forbidden
+{
+	"timestamp": "2021-08-09T21:50:40.2363793" (datetime),
+	"status": 403 (number),
+	"error": "FORBIDDEN" (string),
+	"code": "NOT_ALLOWED" (string),
+	"msg": "허가되지 않은 접근입니다." (string)
+}
+
+
+Returns:
+
+- 204 No Content (Success)
+- 401 Unauthorized (user status logout)
+- 403 Forbidden (Not allowed)
+
+Note:
+
+- 헤더에 명시된 사용자가 "관리자"여야만 요청할 수 있음.
+<br>
+
+### 12) 알림 확인
 
 `/manage/alarms`
 
@@ -520,7 +808,7 @@ Note:
 
 <br>
 
-### 9) 알림 수정
+### 13) 알림 수정
 
 `/manage/alarms`
 
