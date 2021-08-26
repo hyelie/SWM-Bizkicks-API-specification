@@ -70,7 +70,7 @@ HTTP/1.1 403 Forbidden
 
 ### 2) 킥보드 이용 내역 조회 - 개인
 
-`/kickboard/usages?from=x&to=y&page=z&unit=w`
+`/kickboard/consumption?from=x&to=y&page=z&unit=w`
 
 Method : **GET**
 
@@ -183,7 +183,7 @@ Default:
 
 ### 3) 킥보드 이용 내역 추가 - 개인 ~~(주차사진은 어떻게 할까?)~~
 
-`/kickboard/usages`
+`/kickboard/consumption`
 
 Method : **POST**
 
