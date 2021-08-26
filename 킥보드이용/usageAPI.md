@@ -102,11 +102,16 @@ HTTP/1.1 200 OK
 			"arrive_time" : "2020-10-10T14:25:40+09:00" (string, UTC),
 			"location_list" :
 				[
-					["131.0" (number), "131.1" (number)] (number list),
-					["131.1" (number), "131.2" (number)] (number list),
-					["131.4" (number), "131.7" (number)] (number list),
+					{
+						"latitude" : 131.0 (number),
+						"longitude" : 131.1 (number)
+					},
+					{
+						"latitude" : 131.2 (number),
+						"longitude" : 131.6 (number)
+					},
 					...
-				] (list of list),
+				] (list of json),
 			"interval" : 5000 (number)
 		},
 		{
@@ -115,11 +120,16 @@ HTTP/1.1 200 OK
 			"arrive_time" : "2020-07-28T14:25:40+09:00" (string, UTC),
 			"location_list" :
 				[
-					["129.0" (number), "134.1" (number)] (number list),
-					["129.1" (number), "134.2" (number)] (number list),
-					["129.4" (number), "134.7" (number)] (number list),
+					{
+						"latitude" : 131.0 (number),
+						"longitude" : 131.1 (number)
+					},
+					{
+						"latitude" : 131.2 (number),
+						"longitude" : 131.6 (number)
+					},
 					...
-				] (list of list),
+				] (list of json),
 			"interval" : 5000 (number)
 		},
 	  ...
@@ -186,15 +196,21 @@ Request example)
 ```json
 http body
 {
+	"brand" : "씽씽" (string),
 	"depart_time" : "2020-10-10T14:20:15+09:00" (string, UTC),
 	"arrive_time" : "2020-10-10T14:25:40+09:00" (string, UTC),
 	"location_list" :
 	[
-		["131.0" (number), "131.1" (number)] (number list),
-		["131.1" (number), "131.2" (number)] (number list),
-		["131.4" (number), "131.7" (number)] (number list),
+		{
+			"latitude" : 131.0 (number),
+			"longitude" : 131.1 (number)
+		},
+		{
+			"latitude" : 131.2 (number),
+			"longitude" : 131.6 (number)
+		},
 		...
-	] (list of list),
+	] (list of json),
 	"interval" : 5000 (number),
 }
 ```
