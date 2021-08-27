@@ -112,7 +112,7 @@ HTTP/1.1 200 OK
 					},
 					...
 				] (list of json),
-			"interval" : 5000 (number)
+			"cycle" : 5000 (number)
 		},
 		{
 			"brand" : 킥고잉 (number),
@@ -130,7 +130,7 @@ HTTP/1.1 200 OK
 					},
 					...
 				] (list of json),
-			"interval" : 5000 (number)
+			"cycle" : 5000 (number)
 		},
 	  ...
 	] (json list)
@@ -170,7 +170,7 @@ Returns:
 Note:
 
 - 헤더에 명시된 사용자가 "사용자"여야만 요청할 수 있음.
-- interval : 위치 좌표 측정 주기. 단위 ms.
+- cycle : 위치 좌표 측정 주기. 단위 ms.
 
 Default:
 
@@ -213,7 +213,7 @@ http body
 		},
 		...
 	] (list of json),
-	"interval" : 5000 (number),
+	"cycle" : 5000 (number),
 }
 ```
 
@@ -259,7 +259,7 @@ Returns:
 Note:
 
 - 헤더에 명시된 사용자가 "사용자"여야만 요청할 수 있다.
-- interval : 위치 좌표 측정 주기. 단위 ms.
+- cycle : 위치 좌표 측정 주기. 단위 ms.
 
 <br>
 

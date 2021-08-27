@@ -280,7 +280,7 @@ HTTP/1.1 200 OK
 					["131.4" (number), "131.7" (number)] (list),
 					...
 				] (list of list),
-			"interval" : 5000 (number)
+			"cycle" : 5000 (number)
 		},
 		{
 			"depart_time" : "2020-07-28T14:20:15" (string, UTC),
@@ -292,7 +292,7 @@ HTTP/1.1 200 OK
 					["129.4" (number), "134.7" (number)] (list),
 					...
 				] (list of list),
-			"interval" : 5000 (number)
+			"cycle" : 5000 (number)
 		},
 	  ...
 	] (json list)
