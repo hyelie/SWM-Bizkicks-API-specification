@@ -98,8 +98,8 @@ HTTP/1.1 200 OK
 	[
 		{
 			"brand" : 씽씽 (number),
-			"depart_time" : "2020-10-10T14:20:15+09:00" (string, UTC),
-			"arrive_time" : "2020-10-10T14:25:40+09:00" (string, UTC),
+			"depart_time" : "2020-10-10T14:20:15" (string, UTC),
+			"arrive_time" : "2020-10-10T14:25:40" (string, UTC),
 			"location_list" :
 				[
 					{
@@ -116,8 +116,8 @@ HTTP/1.1 200 OK
 		},
 		{
 			"brand" : 킥고잉 (number),
-			"depart_time" : "2020-07-28T14:20:15+09:00" (string, UTC),
-			"arrive_time" : "2020-07-28T14:25:40+09:00" (string, UTC),
+			"depart_time" : "2020-07-28T14:20:15" (string, UTC),
+			"arrive_time" : "2020-07-28T14:25:40" (string, UTC),
 			"location_list" :
 				[
 					{
@@ -157,7 +157,7 @@ HTTP/1.1 403 Forbidden
 
 Validation:
 
-- datetime : YYYY-MM-DDTHH:mm:ss+09:00 (utc)
+- datetime : YYYY-MM-DDTHH:mm:ss (utc)
 - from : YYYY-MM-DD (date)
 - to : YYYY-MM-DD (date)
 
@@ -183,6 +183,8 @@ Default:
 
 ### 3) 킥보드 이용 내역 추가 - 개인 ~~(주차사진은 어떻게 할까?)~~
 
+<br> 추가적으로, 킥보드 이용을 하려 할 때 기업의 사용시간이 over되었으면 사용하지 못하게 하는 기능도 필요하지 않을까?<br>
+
 `/kickboard/consumption`
 
 Method : **POST**
@@ -197,8 +199,8 @@ Request example)
 http body
 {
 	"brand" : "씽씽" (string),
-	"depart_time" : "2020-10-10T14:20:15+09:00" (string, UTC),
-	"arrive_time" : "2020-10-10T14:25:40+09:00" (string, UTC),
+	"depart_time" : "2020-10-10T14:20:15" (string, UTC),
+	"arrive_time" : "2020-10-10T14:25:40" (string, UTC),
 	"location_list" :
 	[
 		{
@@ -220,7 +222,7 @@ Response : 통신 결과 및 메시지 리턴.
 Response example)
 
 ```json
-HTTP/1.1 200 OK
+HTTP/1.1 201 OK
 {
 	"msg" : "Success" (string)
 }
@@ -246,7 +248,7 @@ HTTP/1.1 403 Forbidden
 
 Validation:
 
-- datetime 형식 : YYYY-MM-DDTHH:mm:ss+09:00
+- datetime 형식 : YYYY-MM-DDTHH:mm:ss
 
 Returns:
 
