@@ -92,6 +92,7 @@ Response example)
 ```json
 HTTP/1.1 200 OK
 {
+  "page" : 1 (number),
   "unit" : 10 (number),
   "total_time" : 100 (number),
 	"history" : 
@@ -176,8 +177,8 @@ Default:
 
 - page : 1
 - unit : 10
-- from : 해당 달의 시작일
-- to : 조회하는 시점 날짜
+- from : to값에 들어있는 달의 시작 날짜
+- to : default인 경우 조회하는 시점 날짜
 
 <br>
 
