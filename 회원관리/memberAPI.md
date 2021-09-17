@@ -2,7 +2,7 @@
 
 ### 1) 회원가입
 
-`/members`
+`/member/signup`
 
 Method : **POST**
 
@@ -16,7 +16,10 @@ Request example)
 http body
 {
   "id" : "root" (string),
+  "name" : "사용자" (string),
   "password" : "password" (string),
+  "license" : true (boolean),
+  "user_role" : "ROLE_USER" (string),
   "phone_number" : "01012345678" (string),
   "company_code" : "code" (string)
 }
@@ -32,6 +35,15 @@ HTTP/1.1 201 Created
 	"msg" : "Success" (string)
 }
 
+HTTP/1.1 400 Bad Request
+{
+"timestamp": "2021-09-17T17:42:27.0850648" (datetime),
+"status": 400 (number),
+"error": "BAD_REQUEST" (string),
+"code": "PARAMETER_NOT_VALID" (string),
+"msg": "입력 정보가 유효하지 않습니다." (string)
+}
+
 HTTP/1.1 409 Conflict
 {
 	"timestamp": "2021-08-09T21:53:57.1167114" (datetime),
@@ -45,13 +57,21 @@ HTTP/1.1 409 Conflict
 Returns:
 
 - 201 Create (Success)
+- 400 Bad Request (Parameter not valid)
 - 409 Conflicted (id duplicated)
+
+Validation:
+
+- user_role : ROLE_USER, ROLE_MANAGER 2개의 값을 가질 수 있음. ROLE_USER는 일반 사용자(임직원), ROLE_MANAGER는 관리자(복지 담당자)임.
+- license : true or false
+
+
 
 <br>
 
 ### 2) 로그인
 
-`/members/login`
+`/member/login`
 
 Method : **POST**
 
@@ -69,14 +89,17 @@ http body
 }
 ```
 
-Response : 통신 결과 및 메시지 리턴. 실패 시 실패 이유 리턴.
+Response : 실패 시 에러 코드 및 메시지 리턴. 성공 지 type, access Token, refresh Token, access token 만료 시간을 리턴받음. access token은 authorization hearer에 붙여넣으면 됨.
 
 Response example)
 
 ```json
 HTTP/1.1 200 OK
 {
-  "msg" : "Success" (string)
+	"grantType": "bearer" (string),
+	"accessToken": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMSIsImF1dGgiOiJST0xFX01BTkFHRVIiLCJleHAiOjE2MzE4NjkyNDl9.oWP7kfI1i2eERSpU34Tqiv36x-ZxGtE_4zqVBUxl7k3JRIqpnli0QNqwyzrIPQAcu0xlU0K-bQvlo5alhjIPKA" (string),
+	"accessTokenExpiresIn": 1631869249795 (number),
+	"refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MzI0NzIyNDl9.bUJsRxw_OXauLAsSqwlnv8s6Ce2EXpJZit5SRqCmy2_G0aol5Diphijz2Rl1BFB5YS8eHzoErbZodtU5gFWUmQ" (string)
 }
 
 HTTP/1.1 401 Unauthorized
@@ -84,30 +107,151 @@ HTTP/1.1 401 Unauthorized
 	"timestamp": "2021-08-09T21:48:32.9523621" (datetime),
 	"status": 401 (number),
 	"error": "UNAUTHORIZED" (string),
-	"code": "ID_NOT_EXIST" (string),
-	"msg": "아이디가 존재하지 않습니다." (string)
-}
-
-HTTP/1.1 401 Unauthorized
-{
-	"timestamp": "2021-08-09T21:48:32.9523621" (datetime),
-	"status": 401 (number),
-	"error": "UNAUTHORIZED" (string),
-	"code": "PASSWORD_NOT_VALID" (string),
-	"msg": "비밀번호가 틀렸습니다." (string)
+	"code": "NO_UNAUTHORIZED" (string),
+	"msg": "자격 증명에 실패했습니다." (string)
 }
 ```
 
 Returns:
 
 - 200 OK (Success)
-- 401 Unauthorized ('ID does not exist' or 'Not valid password')
+- 401 Unauthorized
 
 <br>
 
-### 3) 아이디 찾기
+### 3) 사용자 정보
 
-`/members/find/id`
+`/member/me`
+
+Method : **GET**
+
+Description : 클라이언트가 authorization header에 access token을 담아 전송하면 해당 사용자의 정보를 리턴.
+
+Request : authorization header에 access token을 담아 전송. access token 앞에 "Bearer "를 붙임.
+
+Request example)
+
+```json
+http header
+{
+  "authorization" : "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMSIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2MzE4NjgyNjR9.k2QYcm0HCpRKFoUIjyBRmMyCptZVvPPEvObmbOBCmBXpdj0xZYsaxsaxSD5E4GRuHEzize3UDLeKTnHTS3PHoQ" (string)
+}
+```
+
+Response : 실패 시 에러 코드 및 메시지 리턴. 성공 지 type, access Token, refresh Token, access token 만료 시간을 리턴받음. access token은 authorization hearer에 붙여넣으면 됨. access token이 변조된 경우 복호화에서 문제가 생기기 때문에 사용자가 존재하지 않는다는 에러 메시지가 나오게 됨.
+
+Response example)
+
+```json
+HTTP/1.1 200 OK
+{
+	"memberId": "user1",
+	"name": "사용자1",
+	"userRole": "ROLE_USER",
+	"license" : true,
+	"phoneNumber": "0102372666",
+	"customerCompanyName": "삼성",
+}
+
+HTTP/1.1 404 Not Found
+{
+	"timestamp": "2021-08-09T21:48:32.9523621" (datetime),
+	"status": 404,
+	"error": "NOT_FOUND",
+	"code": "MEMBER_NOT_EXIST",
+	"msg": "사용자가 존재하지 않습니다."
+}
+```
+
+Returns:
+
+- 200 OK (Success)
+- 404 Not Found
+
+Validation:
+
+- user_role : ROLE_USER, ROLE_MANAGER 2개의 값을 가질 수 있음. ROLE_USER는 일반 사용자(임직원), ROLE_MANAGER는 관리자(복지 담당자)임.
+
+<br>
+
+### 4) 토큰 재발급
+
+`/member/reissue`
+
+Method : **POST**
+
+Description : 클라이언트가 access token, refresh token을 전송하면 token을 재발급 해 줌.
+
+Request : http body에 access token, refresh token을 전송함.
+
+Request example)
+
+```json
+http body
+{
+	"grantType": "bearer" (string),
+	"accessToken": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMSIsImF1dGgiOiJST0xFX1VTRVIiLCJleHAiOjE2MzE4Njg2ODV9.f67AIBe_kNhvAErYhIC3B5tPVZiYb23lciPRFtJU21AD86ERYRHtT6fTHCgpDzboHg3ivfnFmbmM1fcv2fNjxQ" (string),
+	"accessTokenExpiresIn": 1631868685202 (string),
+	"refreshToken": "eyJhbGciOiJIUzUxMiJ9.eyJleHAiOjE2MzI0NzM0ODR9.M3D3MFpDLfMIvgWObmV2mpZk735vurJDyLgH4E2XQp4peYXZOmby3K9lOOKtcu_vGQUFr-Z4TaIt7LyvUv0TyQ" (string)
+}
+```
+
+Response : 실패 시 에러 코드 및 메시지 리턴. 성공 지 type, access Token, refresh Token, access token 만료 시간을 리턴받음. access token은 authorization hearer에 붙여넣으면 됨.
+
+Response example)
+
+```json
+HTTP/1.1 200 OK
+{
+	"memberId": "user1",
+	"name": "사용자1",
+	"userRole": "ROLE_USER",
+	"license" : true,
+	"phoneNumber": "0102372666",
+	"customerCompanyName": "삼성",
+}
+
+HTTP/1.1 400 Bad Request
+{
+	"timestamp" : "2021-09-17T17:52:27.8201783" (datetime),
+	"status" : 400 (number),
+	"error" : "BAD_REQUEST" (string),
+	"code" : "INVALID_REFRESH_TOKEN" (string),
+	"msg" : "사용자 정보가 유효하지 않습니다." (string)
+}
+
+HTTP/1.1 400 Bad Request
+{
+	"timestamp" : "2021-09-17T17:52:27.8201783" (datetime),
+	"status" : 400 (number),
+	"error" : "BAD_REQUEST" (string),
+	"code" : "INVALID_ACCESS_TOKEN" (string),
+	"msg" : "사용자 정보가 유효하지 않습니다." (string)
+}
+
+HTTP/1.1 401 Unauthorized
+{
+	"timestamp" : "2021-09-17T17:52:27.8201783" (datetime),
+	"status" : 401 (number),
+	"error" : "UNAUTHORIZED" (string),
+	"code" : "MEMBER_STATUS_LOGOUT" (string),
+	"msg" : "사용자가 로그아웃 상태입니다." (string)
+}
+
+```
+
+Returns:
+
+- 200 OK (Success)
+- 400 Bad Request (invalid refresh token)
+- 401 Unauthorized
+- 404 Not Found
+
+<br>
+
+### 5) 아이디 찾기
+
+`/member/find/id`
 
 Method : **POST**
 
@@ -151,9 +295,9 @@ Returns:
 
 <br>
 
-### 4) 비밀번호 찾기
+### 6) 비밀번호 찾기
 
-`/members/find/password`
+`/member/find/password`
 
 Method : **POST**
 
@@ -197,9 +341,9 @@ Returns:
 
 <br>
 
-### 5) 운전면허 등록 - 직접 경찰정 API에 접근해도 될 듯.
+### 7) 운전면허 등록 - 직접 경찰정 API에 접근해도 될 듯.
 
-`/members/license`
+`/member/license`
 
 Method : **POST**
 
@@ -260,9 +404,9 @@ Returns:
 
 <br>
 
-### 6) 비밀번호 변경
+### 8) 비밀번호 변경
 
-`/members/modify/password`
+`/member/modify/password`
 
 Method : **POST**
 
