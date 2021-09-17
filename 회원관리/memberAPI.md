@@ -145,12 +145,12 @@ Response example)
 ```json
 HTTP/1.1 200 OK
 {
-	"memberId": "user1",
+	"id": "user1",
 	"name": "사용자1",
-	"userRole": "ROLE_USER",
+	"user_role": "ROLE_USER",
 	"license" : true,
-	"phoneNumber": "0102372666",
-	"customerCompanyName": "삼성",
+	"phone_number": "0102372666",
+	"company_name": "삼성"
 }
 
 HTTP/1.1 404 Not Found
