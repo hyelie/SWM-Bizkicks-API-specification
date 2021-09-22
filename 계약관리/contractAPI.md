@@ -498,9 +498,11 @@ Response example)
 HTTP/1.1 204 No Content - membership
 
 HTTP/1.1 204 - plan
+
 {
 	list : ["씽씽", "지쿠터",...] 
 }
+
 HTTP/1.1 401 Unauthorized
 {
 	"timestamp": "2021-08-09T21:48:32.9523621" (datetime),
