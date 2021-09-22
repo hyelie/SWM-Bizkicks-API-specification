@@ -272,10 +272,12 @@ HTTP/1.1 403 Forbidden
 ```
 
 Validation:
+<br>
 'membership'
 - type : "membership" 
 - duedate : YYYY-MM-DD (date)
 - list : 계약된 킥보드 회사 목록. element는 회사명, 시간당 금액, 서비스 지역, 보험 제공 여부, 헬멧 제공 여부, 사용시간을 가지고 있음.
+<br>
 'plan'
 - type : "plan"
 - startdate : YYYY-MM-DD (date)
@@ -361,10 +363,11 @@ HTTP/1.1 403 Forbidden
 ```
 
 Validation:
+<br>
 'membership'
 - type : 계약 타입. "membership"
 - date : YYYY-MM-DD
-
+<br>
 'plan'
 - type : 계약 타입. "plan" 
 - date : YYYY-MM-DD
@@ -449,9 +452,11 @@ HTTP/1.1 403 Forbidden
 ```
 
 Validation:
+<br>
 'membership'
 - type : 계약 타입. "membership"
 - date : YYYY-MM-DD (date)
+<br>
 'plan'
 - type : 계약 타입. "plan"
 - list : 브랜드 이름, 업체별구매시간
@@ -484,8 +489,12 @@ Response : 통신 결과 및 메시지 리턴.
 Response example)
 
 ```json
-HTTP/1.1 204 No Content
+HTTP/1.1 204 No Content - membership
 
+HTTP/1.1 204 - plan
+{
+	list : ["씽씽", "지쿠터",...] 
+}
 HTTP/1.1 401 Unauthorized
 {
 	"timestamp": "2021-08-09T21:48:32.9523621" (datetime),
