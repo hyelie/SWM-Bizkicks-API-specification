@@ -185,13 +185,13 @@ Note:
 
 <br>
 
-### 4) 계약 조회 - 현재 계약 종류, 종료 기간, 계약 중인 킥보드 업체 목록 및 요약정보 - membership
+### 4) 계약 조회 - 현재 계약 종류, 종료 기간, 계약 중인 킥보드 업체 목록 및 요약정보
 
-`/manage/contracts/membership`
+`/manage/contracts`
 
 Method : **GET**
 
-Description : 클라이언트가 해당 API를 호출하면 서버에서 헤더에 있는 아이디가 관리자 아이디인지 유효성 검사를 진행한 후 해당 고객 법인의 계약 종류, 종료 기간, 계약중인 킥보드 업체 및 멤버십 계약정보 리턴
+Description : 클라이언트가 해당 API를 호출하면 서버에서 헤더에 있는 아이디가 관리자 아이디인지 유효성 검사를 진행한 후 해당 고객 법인의 계약 종류, 종료 기간, 계약중인 킥보드 업체 및 계약정보 리턴
 
 Request : 사용자의 정보가 담긴 Authorization header를 전송함.
 
@@ -200,7 +200,7 @@ Response : 성공 시 고객 법인의 계약 종류, 시작 날짜, 종료 날�
 Response example)
 
 ```json
-HTTP/1.1 200 OK
+HTTP/1.1 200 OK - membership
 {
   "type" : "membership" (string),
   "startdate" : "2020-12-31" (date),
@@ -224,59 +224,8 @@ HTTP/1.1 200 OK
   ] (json list)
 }
 
-HTTP/1.1 401 Unauthorized
-{
-	"timestamp": "2021-08-09T21:48:32.9523621" (datetime),
-	"status": 401 (number),
-	"error": "UNAUTHORIZED" (string),
-	"code": "USER_STATUS_LOGOUT" (string),
-	"msg": "사용자가 로그아웃 상태입니다." (string)
-}
+HTTP/1.1 200 OK - plan
 
-HTTP/1.1 403 Forbidden
-{
-	"timestamp": "2021-08-09T21:50:40.2363793" (datetime),
-	"status": 403 (number),
-	"error": "FORBIDDEN" (string),
-	"code": "NOT_ALLOWED" (string),
-	"msg": "허가되지 않은 접근입니다." (string)
-}
-```
-
-Validation:
-
-- type : "membership" 
-- duedate : YYYY-MM-DD (date)
-- list : 계약된 킥보드 회사 목록. element는 회사명, 시간당 금액, 서비스 지역, 보험 제공 여부, 헬멧 제공 여부, 사용시간을 가지고 있음.
-
-Returns:
-
-- 200 OK (Success)
-- 401 Unauthorized (user status logout)
-- 403 Forbidden (Not allowed)
-
-Note:
-
-- 헤더에 명시된 사용자가 "관리자"여야만 요청할 수 있음.
-
-<br>
-
-### 5) 계약 조회 - 현재 계약 종류, 종료 기간, 계약 중인 킥보드 업체 목록 및 요약정보 - plan
-
-`/manage/contracts/plan`
-
-Method : **GET**
-
-Description : 클라이언트가 해당 API를 호출하면 서버에서 헤더에 있는 아이디가 관리자 아이디인지 유효성 검사를 진행한 후 해당 고객 법인의 계약 종류, 사용시간, 전체시간, 계약중인 킥보드 업체 및 플랜 계약정보 리턴
-
-Request : 사용자의 정보가 담긴 Authorization header를 전송함.
-
-Response : 성공 시 고객 법인의 계약 종류, 시작 날짜, 전체시간, 사용한 시간, 계약중인 킥보드 업체 목록 및 요약정보 리턴. 실패 시 실패 사유를 메시지로 리턴.
-
-Response example)
-
-```json
-HTTP/1.1 200 OK
 {
   "type" : "plan" (string),
   "startdate" : "2020-12-31" (date),
@@ -323,10 +272,14 @@ HTTP/1.1 403 Forbidden
 ```
 
 Validation:
-
-- type : "plan" 
+'membership'
+- type : "membership" 
 - duedate : YYYY-MM-DD (date)
-- list : 계약된 킥보드 회사 목록. element는 회사명, 시간당 금액, 서비스 지역, 보험 제공 여부, 헬멧 제공 여부, 사용시간, 업체별 전체시간을 가지고 있음.
+- list : 계약된 킥보드 회사 목록. element는 회사명, 시간당 금액, 서비스 지역, 보험 제공 여부, 헬멧 제공 여부, 사용시간을 가지고 있음.
+'plan'
+- type : "plan"
+- startdate : YYYY-MM-DD (date)
+- list : 계약된 킥보드 회사 목록. element는 회사명, 시간당 금액, 서비스 지역, 보험 제공 여부, 헬멧 제공 여부, 사용시간을 가지고 있음.
 
 Returns:
 
@@ -338,12 +291,11 @@ Note:
 
 - 헤더에 명시된 사용자가 "관리자"여야만 요청할 수 있음.
 
-
 <br>
 
-### 6) 계약 추가 - membership
+### 6) 계약 추가
 
-`/manage/contracts/membership`
+`/manage/contracts`
 
 Method : **POST**
 
@@ -354,74 +306,14 @@ Request : 사용자의 정보가 담긴 Authorization header, 계약 종류, 계
 Request example)
 
 ```json
-http body
+http body - membership
 {
   "type" : "membership" (string),
   "duedate" : "2020-12-31" (datetime),
   "startdate" : "2020-12-31" (datetime)
 }
-```
 
-Response : 통신 결과 및 메시지 리턴.
-
-Response example)
-
-```json
-HTTP/1.1 201 Created
-{
-	"msg" : "Success" (string)
-}
-
-HTTP/1.1 401 Unauthorized
-{
-	"timestamp": "2021-08-09T21:48:32.9523621" (datetime),
-	"status": 401 (number),
-	"error": "UNAUTHORIZED" (string),
-	"code": "USER_STATUS_LOGOUT" (string),
-	"msg": "사용자가 로그아웃 상태입니다." (string)
-}
-
-HTTP/1.1 403 Forbidden
-{
-	"timestamp": "2021-08-09T21:50:40.2363793" (datetime),
-	"status": 403 (number),
-	"error": "FORBIDDEN" (string),
-	"code": "NOT_ALLOWED" (string),
-	"msg": "허가되지 않은 접근입니다." (string)
-}
-```
-
-Validation:
-
-- type : 계약 타입. "membership"
-- date : YYYY-MM-DD
-
-Returns:
-
-- 200 OK (Success)
-- 401 Unauthorized (user status logout)
-- 403 Forbidden (Not allowed)
-
-Note:
-
-- 헤더에 명시된 사용자가 "관리자"여야만 요청할 수 있음.
-
-<br>
-
-### 7) 계약 추가 - plan
-
-`/manage/contracts/plan`
-
-Method : **POST**
-
-Description : 클라이언트가 계약 종류, 계약 시작날짜, 업체목록, 업체별 구매시간을 전송하면 서버에서 헤더에 있는 아이디가 관리자 아이디인지 유효성 검사를 진행한 후 해당 고객 법인의 계약 정보를 남김.
-
-Request : 사용자의 정보가 담긴 Authorization header, 계약 종류, 킥보드 업체 이름 목록, 계약 기간을 POST로 전송함.
-
-Request example)
-
-```json
-http body
+http body - plan
 {
   "type" : "plan" (string),
   "startdate" : "2020-12-31" (datetime),
@@ -469,7 +361,11 @@ HTTP/1.1 403 Forbidden
 ```
 
 Validation:
+'membership'
+- type : 계약 타입. "membership"
+- date : YYYY-MM-DD
 
+'plan'
 - type : 계약 타입. "plan" 
 - date : YYYY-MM-DD
 - list : 계약할 킥보드 회사 목록, 업체별 구매시간
@@ -486,9 +382,9 @@ Note:
 
 <br>
 
-### 8) 계약 갱신 - membership
+### 8) 계약 갱신
 
-`/manage/contracts/membership`
+`/manage/contracts`
 
 Method : **PUT**
 
@@ -499,75 +395,14 @@ Request : 사용자의 정보가 담긴 Authorization header, 계약 종류, 킥
 Request example)
 
 ```json
-http body
+http body - membership
 {
   "type" : "membership" (string),
   "startdate" : "2020-12-31" (date),
   "duedate" : "2020-12-31" (date)
 }
-```
 
-Response : 통신 결과 및 메시지 리턴.
-
-Response example)
-
-```json
-HTTP/1.1 200 OK
-{
-	"msg" : "Success" (string)
-}
-
-HTTP/1.1 401 Unauthorized
-{
-	"timestamp": "2021-08-09T21:48:32.9523621" (datetime),
-	"status": 401 (number),
-	"error": "UNAUTHORIZED" (string),
-	"code": "USER_STATUS_LOGOUT" (string),
-	"msg": "사용자가 로그아웃 상태입니다." (string)
-}
-
-HTTP/1.1 403 Forbidden
-{
-	"timestamp": "2021-08-09T21:50:40.2363793" (datetime),
-	"status": 403 (number),
-	"error": "FORBIDDEN" (string),
-	"code": "NOT_ALLOWED" (string),
-	"msg": "허가되지 않은 접근입니다." (string)
-}
-```
-
-Validation:
-
-- type : 계약 타입. "membership"
-- date : YYYY-MM-DD (date)
-
-Returns:
-
-- 200 OK (Success)
-- 401 Unauthorized (user status logout)
-- 403 Forbidden (Not allowed)
-
-Note:
-
-- 헤더에 명시된 사용자가 "관리자"여야만 요청할 수 있음.
-- 고객 법인의 계약된 킥보드 법인 중 일부 킥보드 법인을 삭제/추가하는 경우 해당 API를 이용.
-
-<br>
-
-### 9) 계약 갱신 - plan
-
-`/manage/contracts/plan`
-
-Method : **PUT**
-
-Description : 클라이언트가 계약 종류, 계약 시작날짜, 회사목록, 업체별 구매시간을 전송하면 서버에서 헤더에 있는 아이디가 관리자 아이디인지 유효성 검사를 진행한 후 해당 고객 법인의 계약 정보를 갱신함.
-
-Request : 사용자의 정보가 담긴 Authorization header, 계약 종류, 킥보드 업체 이름 목록, 계약 시작날짜를 PUT로 전송함.
-
-Request example)
-
-```json
-http body
+http body - plan
 {
   "type" : "plan" (string),
   "list" : [
@@ -614,7 +449,10 @@ HTTP/1.1 403 Forbidden
 ```
 
 Validation:
-
+'membership'
+- type : 계약 타입. "membership"
+- date : YYYY-MM-DD (date)
+'plan'
 - type : 계약 타입. "plan"
 - list : 브랜드 이름, 업체별구매시간
 
@@ -631,9 +469,9 @@ Note:
 
 <br>
 
-### 10) 계약 삭제 - membership
+### 10) 계약 삭제
 
-`/manage/contracts/membership`
+`/manage/contracts`
 
 Method : **DELETE**
 
@@ -679,59 +517,6 @@ Note:
 
 <br>
 
-### 11) 계약 삭제 - plan
-
-`/manage/contracts/plan`
-
-Method : **DELETE**
-
-Description : 클라이언트가 해당 API를 호출하면 서버에서 관리자 아이디인지 유효성 검사를 진행한 후 해당 고객 법인이 요청한 업체들과 계약을 해지함.
-
-Request : 사용자의 정보가 담긴 Authorization header을 전송하고 계약을 해지할 브랜드 이름을 리스트로 전송.
-
-Response : 통신 결과 및 메시지 리턴.
-
-Response example)
-
-```json
-http body
-{
-  "list" : ["씽씽", "지쿠터", ...]
-}
-```
-
-
-HTTP/1.1 204 No Content
-
-HTTP/1.1 401 Unauthorized
-{
-	"timestamp": "2021-08-09T21:48:32.9523621" (datetime),
-	"status": 401 (number),
-	"error": "UNAUTHORIZED" (string),
-	"code": "USER_STATUS_LOGOUT" (string),
-	"msg": "사용자가 로그아웃 상태입니다." (string)
-}
-
-HTTP/1.1 403 Forbidden
-{
-	"timestamp": "2021-08-09T21:50:40.2363793" (datetime),
-	"status": 403 (number),
-	"error": "FORBIDDEN" (string),
-	"code": "NOT_ALLOWED" (string),
-	"msg": "허가되지 않은 접근입니다." (string)
-}
-
-
-Returns:
-
-- 204 No Content (Success)
-- 401 Unauthorized (user status logout)
-- 403 Forbidden (Not allowed)
-
-Note:
-
-- 헤더에 명시된 사용자가 "관리자"여야만 요청할 수 있음.
-<br>
 
 ### 12) 알림 확인
 
