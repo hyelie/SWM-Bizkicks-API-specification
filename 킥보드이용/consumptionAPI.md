@@ -70,7 +70,7 @@ HTTP/1.1 403 Forbidden
 
 ### 2) 킥보드 이용 내역 조회 - 개인
 
-`/kickboard/usages?from=x&to=y&page=z&unit=w`
+`/kickboard/consumption?from=x&to=y&page=z&unit=w`
 
 Method : **GET**
 
@@ -92,35 +92,46 @@ Response example)
 ```json
 HTTP/1.1 200 OK
 {
+  "page" : 1 (number),
   "unit" : 10 (number),
   "total_time" : 100 (number),
 	"history" : 
 	[
 		{
 			"brand" : 씽씽 (number),
-			"depart_time" : "2020-10-10T14:20:15+09:00" (string, UTC),
-			"arrive_time" : "2020-10-10T14:25:40+09:00" (string, UTC),
+			"depart_time" : "2020-10-10T14:20:15" (string, UTC),
+			"arrive_time" : "2020-10-10T14:25:40" (string, UTC),
 			"location_list" :
 				[
-					["131.0" (number), "131.1" (number)] (number list),
-					["131.1" (number), "131.2" (number)] (number list),
-					["131.4" (number), "131.7" (number)] (number list),
+					{
+						"latitude" : 131.0 (number),
+						"longitude" : 131.1 (number)
+					},
+					{
+						"latitude" : 131.2 (number),
+						"longitude" : 131.6 (number)
+					},
 					...
-				] (list of list),
-			"interval" : 5000 (number)
+				] (list of json),
+			"cycle" : 5000 (number)
 		},
 		{
 			"brand" : 킥고잉 (number),
-			"depart_time" : "2020-07-28T14:20:15+09:00" (string, UTC),
-			"arrive_time" : "2020-07-28T14:25:40+09:00" (string, UTC),
+			"depart_time" : "2020-07-28T14:20:15" (string, UTC),
+			"arrive_time" : "2020-07-28T14:25:40" (string, UTC),
 			"location_list" :
 				[
-					["129.0" (number), "134.1" (number)] (number list),
-					["129.1" (number), "134.2" (number)] (number list),
-					["129.4" (number), "134.7" (number)] (number list),
+					{
+						"latitude" : 131.0 (number),
+						"longitude" : 131.1 (number)
+					},
+					{
+						"latitude" : 131.2 (number),
+						"longitude" : 131.6 (number)
+					},
 					...
-				] (list of list),
-			"interval" : 5000 (number)
+				] (list of json),
+			"cycle" : 5000 (number)
 		},
 	  ...
 	] (json list)
@@ -147,7 +158,7 @@ HTTP/1.1 403 Forbidden
 
 Validation:
 
-- datetime : YYYY-MM-DDTHH:mm:ss+09:00 (utc)
+- datetime : YYYY-MM-DDTHH:mm:ss (utc)
 - from : YYYY-MM-DD (date)
 - to : YYYY-MM-DD (date)
 
@@ -160,20 +171,22 @@ Returns:
 Note:
 
 - 헤더에 명시된 사용자가 "사용자"여야만 요청할 수 있음.
-- interval : 위치 좌표 측정 주기. 단위 ms.
+- cycle : 위치 좌표 측정 주기. 단위 ms.
 
 Default:
 
 - page : 1
 - unit : 10
-- from : 해당 달의 시작일
-- to : 조회하는 시점 날짜
+- from : to값에 들어있는 달의 시작 날짜
+- to : default인 경우 조회하는 시점 날짜
 
 <br>
 
 ### 3) 킥보드 이용 내역 추가 - 개인 ~~(주차사진은 어떻게 할까?)~~
 
-`/kickboard/usages`
+<br> 추가적으로, 킥보드 이용을 하려 할 때 기업의 사용시간이 over되었으면 사용하지 못하게 하는 기능도 필요하지 않을까?<br>
+
+`/kickboard/consumption`
 
 Method : **POST**
 
@@ -186,16 +199,22 @@ Request example)
 ```json
 http body
 {
-	"depart_time" : "2020-10-10T14:20:15+09:00" (string, UTC),
-	"arrive_time" : "2020-10-10T14:25:40+09:00" (string, UTC),
+	"brand" : "씽씽" (string),
+	"depart_time" : "2020-10-10T14:20:15" (string, UTC),
+	"arrive_time" : "2020-10-10T14:25:40" (string, UTC),
 	"location_list" :
 	[
-		["131.0" (number), "131.1" (number)] (number list),
-		["131.1" (number), "131.2" (number)] (number list),
-		["131.4" (number), "131.7" (number)] (number list),
+		{
+			"latitude" : 131.0 (number),
+			"longitude" : 131.1 (number)
+		},
+		{
+			"latitude" : 131.2 (number),
+			"longitude" : 131.6 (number)
+		},
 		...
-	] (list of list),
-	"interval" : 5000 (number),
+	] (list of json),
+	"cycle" : 5000 (number),
 }
 ```
 
@@ -204,7 +223,7 @@ Response : 통신 결과 및 메시지 리턴.
 Response example)
 
 ```json
-HTTP/1.1 200 OK
+HTTP/1.1 201 OK
 {
 	"msg" : "Success" (string)
 }
@@ -230,7 +249,7 @@ HTTP/1.1 403 Forbidden
 
 Validation:
 
-- datetime 형식 : YYYY-MM-DDTHH:mm:ss+09:00
+- datetime 형식 : YYYY-MM-DDTHH:mm:ss
 
 Returns:
 
@@ -241,7 +260,7 @@ Returns:
 Note:
 
 - 헤더에 명시된 사용자가 "사용자"여야만 요청할 수 있다.
-- interval : 위치 좌표 측정 주기. 단위 ms.
+- cycle : 위치 좌표 측정 주기. 단위 ms.
 
 <br>
 

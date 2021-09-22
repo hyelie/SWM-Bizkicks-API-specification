@@ -271,8 +271,8 @@ HTTP/1.1 200 OK
 	"history" : 
 	[
 		{
-			"depart_time" : "2020-10-10T14:20:15+09:00" (string, UTC),
-			"arrive_time" : "2020-10-10T14:25:40+09:00" (string, UTC),
+			"depart_time" : "2020-10-10T14:20:15" (string, UTC),
+			"arrive_time" : "2020-10-10T14:25:40" (string, UTC),
 			"location_list" :
 				[
 					["131.0" (number), "131.1" (number)] (list),
@@ -280,11 +280,11 @@ HTTP/1.1 200 OK
 					["131.4" (number), "131.7" (number)] (list),
 					...
 				] (list of list),
-			"interval" : 5000 (number)
+			"cycle" : 5000 (number)
 		},
 		{
-			"depart_time" : "2020-07-28T14:20:15+09:00" (string, UTC),
-			"arrive_time" : "2020-07-28T14:25:40+09:00" (string, UTC),
+			"depart_time" : "2020-07-28T14:20:15" (string, UTC),
+			"arrive_time" : "2020-07-28T14:25:40" (string, UTC),
 			"location_list" :
 				[
 					["129.0" (number), "134.1" (number)] (list),
@@ -292,7 +292,7 @@ HTTP/1.1 200 OK
 					["129.4" (number), "134.7" (number)] (list),
 					...
 				] (list of list),
-			"interval" : 5000 (number)
+			"cycle" : 5000 (number)
 		},
 	  ...
 	] (json list)
@@ -330,7 +330,7 @@ Validation:
 
 - from : YYYY-MM-DD (date)
 - to : YYYY-MM-DD (date)
-- datetime : YYYY-MM-DDTHH:mm:ss+09:00 (UTC)
+- datetime : YYYY-MM-DDTHH:mm:ss (UTC)
 
 Returns:
 
