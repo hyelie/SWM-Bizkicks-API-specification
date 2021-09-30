@@ -192,22 +192,24 @@ Method : **POST**
 
 Description : 클라이언트가 출발시간, 도착시간, 이동거리, 위치정보, 위치정보 측정 주기를 담은 JSON과 사진 파일 2개를 form으로 전송하면 서버는 해당 이용 내역을 저장함.
 
-Requset : 사용자의 정보가 담긴 Authorization header, 출발시간, 도착시간, 이동거리, 위치정보, 위치정보 측정 주기를 POST로 전송함.
+Requset : 사용자의 정보가 담긴 Authorization header, multipart/form-data를 담은 content-type header, 출발시간, 도착시간, 이동거리, 위치정보, 위치정보 측정 주기를 POST로 전송함.
 
-Body content type : multipart/form-data.
+Header content type : multipart/form-data
 
 Request example)
 
 ```json
 http body
-image :
-<사진>
+FILE
+image : <사진>
 
+application/json
 detail : 
 {
-	"brand" : "씽씽" (string),
+	"brand" : "킥고잉" (string),
 	"depart_time" : "2020-10-10T14:20:15" (string, UTC),
 	"arrive_time" : "2020-10-10T14:25:40" (string, UTC),
+	"kickboard_id" : 1 (number),
 	"location_list" :
 	[
 		{
