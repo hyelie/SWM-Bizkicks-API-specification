@@ -182,7 +182,7 @@ Default:
 
 <br>
 
-### 3) 킥보드 이용 내역 추가 - 개인 ~~(주차사진은 어떻게 할까?)~~
+### 3) 킥보드 이용 내역 추가 - 개인
 
 <br> 추가적으로, 킥보드 이용을 하려 할 때 기업의 사용시간이 over되었으면 사용하지 못하게 하는 기능도 필요하지 않을까?<br>
 
@@ -190,14 +190,20 @@ Default:
 
 Method : **POST**
 
-Description : 클라이언트가 출발시간, 도착시간, 이동거리, 위치정보, 위치정보 측정 주기를 전송하면 서버는 해당 이용 내역을 저장함.
+Description : 클라이언트가 출발시간, 도착시간, 이동거리, 위치정보, 위치정보 측정 주기를 담은 JSON과 사진 파일 2개를 form으로 전송하면 서버는 해당 이용 내역을 저장함.
 
 Requset : 사용자의 정보가 담긴 Authorization header, 출발시간, 도착시간, 이동거리, 위치정보, 위치정보 측정 주기를 POST로 전송함.
+
+Body content type : multipart/form-data.
 
 Request example)
 
 ```json
 http body
+image :
+<사진>
+
+detail : 
 {
 	"brand" : "씽씽" (string),
 	"depart_time" : "2020-10-10T14:20:15" (string, UTC),
@@ -244,6 +250,24 @@ HTTP/1.1 403 Forbidden
 	"error": "FORBIDDEN" (string),
 	"code": "NOT_ALLOWED" (string),
 	"msg": "허가되지 않은 접근입니다." (string)
+}
+
+HTTP/1.1 404 NOT FOUND
+{
+	"timestamp": "2021-08-09T21:50:40.2363793" (datetime),
+	"status": 403 (number),
+	"error": "NOT_FOUND" (string),
+	"code": "CONTRACT_NOT_EXIST" (string),
+	"msg": "계약이 존재하지 않습니다." (string)
+}
+
+HTTP/1.1 404 NOT FOUND
+{
+	"timestamp": "2021-08-09T21:50:40.2363793" (datetime),
+	"status": 403 (number),
+	"error": "NOT_FOUND" (string),
+	"code": "KICKBOARD_NOT_EXIST" (string),
+	"msg": "존재하지 않는 킥보드입니다." (string)
 }
 ```
 

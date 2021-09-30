@@ -141,7 +141,14 @@ Response example)
 ```json
 HTTP/1.1 200 OK
 {
-	"html" : "/src/씽씽.html" (html file)
+	"brand_name" : "씽씽" (string),
+	"text" : "소개글" (string),
+	"helmet" : true | false (boolean),
+	"insurance" : true | false (boolean),
+	"price_per_hour" : 10000 (number),
+	"image1" : "image1.jpg" (jpg),
+	"image2" : "image2.jpg" (jpg),
+	"image3" : "image3.jpg" (jpg)
 }
 
 HTTP/1.1 401 Unauthorized
