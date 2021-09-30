@@ -146,9 +146,11 @@ HTTP/1.1 200 OK
 	"helmet" : true | false (boolean),
 	"insurance" : true | false (boolean),
 	"price_per_hour" : 10000 (number),
-	"image1" : "image1.jpg" (jpg),
-	"image2" : "image2.jpg" (jpg),
-	"image3" : "image3.jpg" (jpg)
+	"images" : [
+		"wrvaseoran298nad",
+		...
+	] (base64 encoded string list)
+	"service_location" : ["관악구", "서초구", ...] (string list)
 }
 
 HTTP/1.1 401 Unauthorized
