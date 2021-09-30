@@ -200,6 +200,8 @@ Request example)
 
 ```json
 http body
+body content type : multipart/form-data
+
 FILE
 image : <사진>
 
