@@ -71,7 +71,7 @@ HTTP/1.1 403 Forbidden
 <br>
 
 
-### 1) 킥보드 위치 목록 - 수정 必, 보류.
+### 2) 킥보드 사진
 
 front에서 어떤 식으로 호출할지 몰라 보류.
 
@@ -90,39 +90,22 @@ url
 /kickboards/location/{kickboard-id}
 ```
 
-Response : 성공 시 해당 킥보드의 이전 사용자가 찍은 사진을 리턴, 실패 시 실패 사유를 메시지로 리턴.
+Response : 킥보드에 해당하는 사진이 있을 경우 이전 사용자가 찍은 사진을 리턴, 킥보드는 존재하지만 킥보드 사진이 없을 경우는 null 리턴, 킥보드가 존재하지 않는 등의 이유로실패 시 실패 사유를 메시지로 리턴.
 
 Response example)
 
-```
-Header
-content-type : image/jpeg
-
-json
-Body
+```Body : Json
 HTTP/1.1 200 OK
+Body
 {
-	"list" : [
-		{
-			"id" : 1 (number),
-		  "company_name" : "씽씽" (string),
-		  "lat" : 37.566570 (number),
-		  "lng" : 126.978442 (number),
-			"battery" : 100 (number),
-			"model" : "AAAAA" (string),
-			"past_picture": "http:// ... /kickboard" (string)
-		},
-		{
-			"id" : 2 (number),
-		  "company_name" : "킥고잉" (string),
-		  "lat" : 37.55377475931086 (number),
-		  "lng" : 126.96435101606421 (number),
-			"battery" : 100 (number),
-			"model" : "BBBBB" (string),
-			"past_picture": "http:// ... /kickboard" (sring)
-		},
-		...
-	](json list)
+	"image" : "wrvaseoran298nad..."
+}
+
+Body : Json
+HTTP/1.1 204 No Content
+{
+	"image" : null
+	
 }
 
 HTTP/1.1 401 Unauthorized
