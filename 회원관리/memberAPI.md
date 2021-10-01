@@ -410,7 +410,7 @@ Returns:
 
 Method : **POST**
 
-Description : 클라이언트가 새로운 비밀번호를 전송하면 서버에서 헤더에 있는 아이디에 해당하는 사용자의 비밀번호를 변경함.
+Description : 클라이언트가 기존 비밀번호와 새로운 비밀번호를 전송하면 서버에서 헤더에 있는 아이디에 해당하는 사용자의 비밀번호를 변경함.
 
 Request : 사용자의 정보가 담긴 Authorization header, 새 비밀번호를 POST로 전송함.
 
@@ -419,7 +419,8 @@ Request example)
 ```json
 http body
 {
-  "password" : "qwerty" (string)
+"new_password" : "qwerty" (string)
+  "old_password" : "qwerty" (string)
 }
 ```
 
