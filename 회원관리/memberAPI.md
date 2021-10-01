@@ -6,9 +6,9 @@
 
 Method : **POST**
 
-Description : 클라이언트가 아이디, 비밀번호, 휴대폰 번호, 회사 코드를 전송하면 서버에서 회원가입 절차 진행 및 ID에 대해 중복검사 진행 및 결과 리턴.
+Description : 클라이언트가 아이디, 비밀번호, 이메일, 회사 코드를 전송하면 서버에서 회원가입 절차 진행 및 ID에 대해 중복검사 진행 및 결과 리턴.
 
-Request : id, 비밀번호, 휴대폰 번호, 회사 코드를 POST로 전송함.
+Request : id, 비밀번호, 이메일, 회사 코드를 POST로 전송함.
 
 Request example)
 
@@ -20,7 +20,7 @@ http body
   "password" : "password" (string),
   "license" : true (boolean),
   "user_role" : "ROLE_USER" (string),
-  "phone_number" : "01012345678" (string),
+  "email" : "asdf@asdf.com" (string),
   "company_code" : "code" (string)
 }
 ```
@@ -145,12 +145,12 @@ Response example)
 ```json
 HTTP/1.1 200 OK
 {
-	"id": "user1",
-	"name": "사용자1",
-	"user_role": "ROLE_USER",
-	"license" : true,
-	"phone_number": "0102372666",
-	"company_name": "삼성"
+	"id": "user1" (string),
+	"name": "사용자1" (string),
+	"user_role": "ROLE_USER" (string),
+	"license" : true (boolean),
+	"email" : "asdf@asdf.com" (string),
+	"company_name": "삼성" (string)
 }
 
 HTTP/1.1 404 Not Found
@@ -207,7 +207,7 @@ HTTP/1.1 200 OK
 	"name": "사용자1",
 	"userRole": "ROLE_USER",
 	"license" : true,
-	"phoneNumber": "0102372666",
+	"email" : "asdf@asdf.com" (string),
 	"customerCompanyName": "삼성",
 }
 
@@ -255,16 +255,16 @@ Returns:
 
 Method : **POST**
 
-Description : 클라이언트가 휴대폰 번호를 전송하면 서버에서 해당 휴대폰 번호의 유무를 검사한 후 해당하는 아이디를 휴대폰 메시지로 날려줌.
+Description : 클라이언트가 이메일를 전송하면 서버에서 해당 이메일의 유무를 검사한 후 해당하는 아이디를 이메일로 날려줌.
 
-Request : 휴대폰 번호를 POST로 전송함.
+Request : 이메일를 POST로 전송함.
 
 Request example)
 
 ```json
 http body
 {
-  "phone_number" : "01012345678" (string)
+  "email" : "asdf@asdf.com" (string),
 }
 ```
 
@@ -283,15 +283,15 @@ HTTP/1.1 404 Not Found
 	"timestamp": "2021-08-09T21:53:01.1151735" (datetime),
 	"status": 404 (number),
 	"error": "NOT_FOUND" (string),
-	"code": "PHONE_NUMBER_NOT_EXIST" (string),
-	"msg": "휴대폰 번호가 존재하지 않습니다." (string)
+	"code": "EMAIL_NUMBER_NOT_EXIST" (string),
+	"msg": "이메일이 존재하지 않습니다." (string)
 }
 ```
 
 Returns:
 
 - 200 OK (Success)
-- 404 Not Found (phone number does not exist)
+- 404 Not Found (email number does not exist)
 
 <br>
 
@@ -301,16 +301,16 @@ Returns:
 
 Method : **POST**
 
-Description : 클라이언트가 휴대폰 번호를 전송하면 서버에서 해당 휴대폰 번호의 유무를 검사한 후 해당하는 비밀번호를 임의로 바꾼 후 휴대폰 메시지로 날려줌.
+Description : 클라이언트가 이메일를 전송하면 서버에서 해당 이메일의 유무를 검사한 후 해당하는 이메일을 임의로 바꾼 후 이메일로 날려줌.
 
-Request : 휴대폰 번호를 POST로 전송함.
+Request : 이메일을 POST로 전송함.
 
 Request example)
 
 ```json
 http body
 {
-  "phone_number" : "01012345678" (string)
+  "email" : "asdf@asdf.com" (string)
 }
 ```
 
@@ -329,15 +329,15 @@ HTTP/1.1 404 Not Found
 	"timestamp": "2021-08-09T21:53:01.1151735" (datetime),
 	"status": 404 (number),
 	"error": "NOT_FOUND" (string),
-	"code": "PHONE_NUMBER_NOT_EXIST" (string),
-	"msg": "휴대폰 번호가 존재하지 않습니다." (string)
+	"code": "EMAIL_NUMBER_NOT_EXIST" (string),
+	"msg": "이메일이 존재하지 않습니다." (string)
 }
 ```
 
 Returns:
 
 - 200 OK (Success)
-- 404 Not Found (phone number does not exist)
+- 404 Not Found (email) number does not exist)
 
 <br>
 
@@ -447,8 +447,8 @@ HTTP/1.1 404 Not Found
 	"timestamp": "2021-08-09T21:53:01.1151735" (datetime),
 	"status": 404 (number),
 	"error": "NOT_FOUND" (string),
-	"code": "PHONE_NUMBER_NOT_EXIST" (string),
-	"msg": "휴대폰 번호가 존재하지 않습니다." (string)
+	"code": "EMAIL_NUMBER_NOT_EXIST" (string),
+	"msg": "이메일이 존재하지 않습니다." (string)
 }
 ```
 
@@ -456,6 +456,6 @@ Returns:
 
 - 200 OK (Success)
 - 401 Unauthorized (user status logout)
-- 404 Not Found (phone number does not exist)
+- 404 Not Found (email number does not exist)
 
 <br>

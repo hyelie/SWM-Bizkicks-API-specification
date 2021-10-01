@@ -8,7 +8,7 @@ front에서 어떤 식으로 호출할지 몰라 보류.
 
 Method : **GET**
 
-Description : 클라이언트가 기업인증 코드를 전송하면 서버에서 해당 법인이 계약한 킥보드 위도 경도 배터리 모델명 각 킥보드별 이전 사용자 이용 사진을 리턴함.
+Description : 클라이언트가 요청하면 서버에서 해당 사용자가 속해있는 법인이 계약한 킥보드 위도 경도 배터리 모델명 각 킥보드별 이전 사용자 이용 사진을 리턴함.
 
 Request : 사용자의 정보가 담긴 Authorization header, 기업인증 코드를 전송함.
 
@@ -16,7 +16,7 @@ Request example)
 
 ```json
 url
-/kickboards/location?companycode=asd123
+/kickboards/location
 ```
 
 Response : 성공 시 해당 기업이 계약한 킥보드 브랜드 이름, 위도, 경도, 배터리, 모델명, 이전 사용자가 찍은 사진을 리턴, 실패 시 실패 사유를 메시지로 리턴.
