@@ -6,7 +6,7 @@
 
 Method : **POST**
 
-Description : 클라이언트가 아이디, 비밀번호, 이메일, 회사 코드를 전송하면 서버에서 회원가입 절차 진행 및 ID에 대해 중복검사 진행 및 결과 리턴.
+Description : 클라이언트가 아이디, 비밀번호, 이메일, 회사 코드를 전송하면 서버에서 회원가입 절차 진행 및 ID에 대해 중복검사 진행 및 결과 리턴. 이후 인증 코드가 담긴 메일을 발송함.
 
 Request : id, 비밀번호, 이메일, 회사 코드를 POST로 전송함.
 
@@ -69,10 +69,46 @@ Validation:
 <br>
 
 
-### 회원가입이 끝나면 메일을 발송함.
-
 ### 1.5) 인증
 메일로 요청 보내면 해당 사용자의 권한을 높여줌.
+
+`/member/verify/{key}`
+
+Method : **GET**
+
+Description : 클라이언트가 인증 메일로 발송된 key를 path variable로 전송하면 해당 사용자를 인증된 사용자로 만들어 줌. 만약 key가 만료되었다면 오류 메시지를 보냄.
+
+Request : 인증 key를 path variable로 전송함.
+
+Request example)
+
+```
+/member/verify/b4a375cb-41d3-4b78-8942-82b31e25ce41
+```
+
+Response : 통신 결과 및 메시지 리턴.
+
+Response example)
+
+```json
+HTTP/1.1 200 Created
+{
+	"msg" : "Success" (string)
+}
+
+HTTP/1.1 404 NOT FOUND
+{
+"timestamp": "2021-09-17T17:42:27.0850648" (datetime),
+"status": 404 (number),
+"error": "NOT_FOUND" (string),
+"code": "LINK_NOT_EXIST" (string),
+"msg": "인증 메일 링크가 존재하지 않습니다." (string)
+}
+```
+
+Returns:
+
+- 404 NOT FOUND (link not exist)
 
 
 <br>
