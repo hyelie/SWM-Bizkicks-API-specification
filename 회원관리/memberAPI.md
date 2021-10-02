@@ -366,7 +366,7 @@ http body
 Response : 면허 코드, 결과, 의미 리턴, 실패 시 실패 사유 리턴.
 
 응답 예시) - > 굳이 API로 안쓰고 직접 요청해도 될 듯.
-
+f
 ```json
 HTTP/1.1 200 OK
 {
@@ -412,7 +412,7 @@ Method : **POST**
 
 Description : 클라이언트가 기존 비밀번호와 새로운 비밀번호를 전송하면 서버에서 헤더에 있는 아이디에 해당하는 사용자의 비밀번호를 변경함.
 
-Request : 사용자의 정보가 담긴 Authorization header, 새 비밀번호를 POST로 전송함.
+Request : 사용자의 정보가 담긴 Authorization header, 기존 비밀번호, 새 비밀번호를 POST로 전송함.
 
 Request example)
 
