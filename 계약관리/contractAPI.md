@@ -228,11 +228,11 @@ HTTP/1.1 200 OK - plan
 
 {
   "type" : "plan" (string),
-  "startdate" : "2020-12-31" (date),
   "list" : [
 		{
 			"company_name" : "씽씽" (string),
 			"price_per_hour" : 12000 (number),
+			"startdate" : "2020-12-31" (date),
 			"service_location" : ["관악구", "서초구", "강남구"] (string list),
 			"insurance" : true (boolean),
 			"helmet" : false (boolean),
@@ -242,6 +242,7 @@ HTTP/1.1 200 OK - plan
 		{
 			"company_name" : "킥고잉" (string),
 			"price_per_hour" : 10000 (number),
+			"startdate" : "2020-12-31" (date),
 			"service_location" : ["금천구", "강북구", "강서구"] (string list),
 			"insurance" : false (boolean),
 			"helmet" : true (boolean),
