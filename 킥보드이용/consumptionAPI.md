@@ -8,18 +8,18 @@ front에서 어떤 식으로 호출할지 몰라 보류.
 
 Method : **GET**
 
-Description : 클라이언트가 기업인증 코드를 전송하면 서버에서 해당 법인이 계약한 킥보드 위도 경도 배터리 모델명 각 킥보드별 이전 사용자 이용 사진을 리턴함.
+Description : 클라이언트가 요청하면 서버에서 해당 사용자가 속해있는 법인이 계약한 킥보드 위도 경도 배터리 모델명 각 킥보드별 이전 사용자 이용 사진 경로를 리턴함.
 
-Request : 사용자의 정보가 담긴 Authorization header, 기업인증 코드를 전송함.
+Request : 사용자의 정보가 담긴 Authorization header를 전송함.
 
 Request example)
 
 ```json
 url
-/kickboards/location?companycode=asd123
+/kickboards/location
 ```
 
-Response : 성공 시 해당 기업이 계약한 킥보드 브랜드 이름, 위도, 경도, 배터리, 모델명, 이전 사용자가 찍은 사진을 리턴, 실패 시 실패 사유를 메시지로 리턴.
+Response : 성공 시 해당 기업이 계약한 킥보드 브랜드 이름, 위도, 경도, 배터리, 모델명, 이전 사용자가 찍은 사진 경로를 리턴, 실패 시 실패 사유를 메시지로 리턴.
 
 Response example)
 
@@ -28,20 +28,22 @@ HTTP/1.1 200 OK
 {
 	"list" : [
 		{
+			"id" : 1 (number),
 		  "company_name" : "씽씽" (string),
 		  "lat" : 37.566570 (number),
 		  "lng" : 126.978442 (number),
 			"battery" : 100 (number),
 			"model" : "AAAAA" (string),
-			"past_picture": "http:// ... /kickboard.jpg"
+			"past_picture": "http:// ... /kickboard" (string)
 		},
 		{
+			"id" : 2 (number),
 		  "company_name" : "킥고잉" (string),
 		  "lat" : 37.55377475931086 (number),
 		  "lng" : 126.96435101606421 (number),
 			"battery" : 100 (number),
 			"model" : "BBBBB" (string),
-			"past_picture": "http:// ... /kickboard.jpg"
+			"past_picture": "http:// ... /kickboard" (sring)
 		},
 		...
 	](json list)
@@ -68,7 +70,64 @@ HTTP/1.1 403 Forbidden
 
 <br>
 
-### 2) 킥보드 이용 내역 조회 - 개인
+
+### 2) 킥보드 사진
+
+front에서 어떤 식으로 호출할지 몰라 보류.
+
+`/kickboard/location{kickboard-id}`
+
+Method : **GET**
+
+Description : 클라이언트가 요청하면 서버에서 요청한 킥보드에 대한 이전 사용자 이용 사진을 리턴함.
+
+Request : 사용자의 정보가 담긴 Authorization header를 전송.
+
+Request example)
+
+```json
+url
+/kickboards/location/{kickboard-id}
+```
+
+Response : 킥보드에 해당하는 사진이 있을 경우 이전 사용자가 찍은 사진을 리턴, 킥보드는 존재하지만 킥보드 사진이 없을 경우는 null 리턴, 킥보드가 존재하지 않는 등의 이유로실패 시 실패 사유를 메시지로 리턴.
+
+Response example)
+
+```Body : Json
+HTTP/1.1 200 OK
+Body
+{
+	"image" : "wrvaseoran298nad..."
+}
+
+Body : Json
+HTTP/1.1 204 No Content
+{
+	"image" : null
+	
+}
+
+HTTP/1.1 401 Unauthorized
+{
+	"timestamp": "2021-08-09T21:48:32.9523621" (datetime),
+	"status": 401 (number),
+	"error": "UNAUTHORIZED" (string),
+	"code": "USER_STATUS_LOGOUT" (string),
+	"msg": "사용자가 로그아웃 상태입니다." (string)
+}
+
+HTTP/1.1 403 Forbidden
+{
+	"timestamp": "2021-08-09T21:50:40.2363793" (datetime),
+	"status": 403 (number),
+	"error": "FORBIDDEN" (string),
+	"code": "NOT_ALLOWED" (string),
+	"msg": "허가되지 않은 접근입니다." (string)
+}
+```
+
+### 3) 킥보드 이용 내역 조회 - 개인
 
 `/kickboard/consumption?from=x&to=y&page=z&unit=w`
 
@@ -182,7 +241,7 @@ Default:
 
 <br>
 
-### 3) 킥보드 이용 내역 추가 - 개인 ~~(주차사진은 어떻게 할까?)~~
+### 4) 킥보드 이용 내역 추가 - 개인
 
 <br> 추가적으로, 킥보드 이용을 하려 할 때 기업의 사용시간이 over되었으면 사용하지 못하게 하는 기능도 필요하지 않을까?<br>
 
@@ -190,18 +249,28 @@ Default:
 
 Method : **POST**
 
-Description : 클라이언트가 출발시간, 도착시간, 이동거리, 위치정보, 위치정보 측정 주기를 전송하면 서버는 해당 이용 내역을 저장함.
+Description : 클라이언트가 출발시간, 도착시간, 이동거리, 위치정보, 위치정보 측정 주기를 담은 JSON과 사진 파일 2개를 form으로 전송하면 서버는 해당 이용 내역을 저장함.
 
-Requset : 사용자의 정보가 담긴 Authorization header, 출발시간, 도착시간, 이동거리, 위치정보, 위치정보 측정 주기를 POST로 전송함.
+Requset : 사용자의 정보가 담긴 Authorization header, multipart/form-data를 담은 content-type header, 출발시간, 도착시간, 이동거리, 위치정보, 위치정보 측정 주기를 POST로 전송함.
+
+Header content type : multipart/form-data
 
 Request example)
 
 ```json
 http body
+body content type : multipart/form-data
+
+FILE
+image : <사진>
+
+application/json
+detail : 
 {
-	"brand" : "씽씽" (string),
+	"brand" : "킥고잉" (string),
 	"depart_time" : "2020-10-10T14:20:15" (string, UTC),
 	"arrive_time" : "2020-10-10T14:25:40" (string, UTC),
+	"kickboard_id" : 1 (number),
 	"location_list" :
 	[
 		{
@@ -244,6 +313,24 @@ HTTP/1.1 403 Forbidden
 	"error": "FORBIDDEN" (string),
 	"code": "NOT_ALLOWED" (string),
 	"msg": "허가되지 않은 접근입니다." (string)
+}
+
+HTTP/1.1 404 NOT FOUND
+{
+	"timestamp": "2021-08-09T21:50:40.2363793" (datetime),
+	"status": 403 (number),
+	"error": "NOT_FOUND" (string),
+	"code": "CONTRACT_NOT_EXIST" (string),
+	"msg": "계약이 존재하지 않습니다." (string)
+}
+
+HTTP/1.1 404 NOT FOUND
+{
+	"timestamp": "2021-08-09T21:50:40.2363793" (datetime),
+	"status": 403 (number),
+	"error": "NOT_FOUND" (string),
+	"code": "KICKBOARD_NOT_EXIST" (string),
+	"msg": "존재하지 않는 킥보드입니다." (string)
 }
 ```
 

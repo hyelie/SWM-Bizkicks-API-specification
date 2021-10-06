@@ -6,9 +6,9 @@
 
 Method : **POST**
 
-Description : 클라이언트가 아이디, 비밀번호, 휴대폰 번호, 회사 코드를 전송하면 서버에서 회원가입 절차 진행 및 ID에 대해 중복검사 진행 및 결과 리턴.
+Description : 클라이언트가 아이디, 비밀번호, 이메일, 회사 코드를 전송하면 서버에서 회원가입 절차 진행 및 ID에 대해 중복검사 진행 및 결과 리턴. 이후 인증 코드가 담긴 메일을 발송함.
 
-Request : id, 비밀번호, 휴대폰 번호, 회사 코드를 POST로 전송함.
+Request : id, 비밀번호, 이메일, 회사 코드를 POST로 전송함.
 
 Request example)
 
@@ -20,7 +20,7 @@ http body
   "password" : "password" (string),
   "license" : true (boolean),
   "user_role" : "ROLE_USER" (string),
-  "phone_number" : "01012345678" (string),
+  "email" : "asdf@asdf.com" (string),
   "company_code" : "code" (string)
 }
 ```
@@ -65,6 +65,50 @@ Validation:
 - user_role : ROLE_USER, ROLE_MANAGER 2개의 값을 가질 수 있음. ROLE_USER는 일반 사용자(임직원), ROLE_MANAGER는 관리자(복지 담당자)임.
 - license : true or false
 
+
+<br>
+
+
+### 1.5) 인증
+메일로 요청 보내면 해당 사용자의 권한을 높여줌.
+
+`/member/verify/{key}`
+
+Method : **GET**
+
+Description : 클라이언트가 인증 메일로 발송된 key를 path variable로 전송하면 해당 사용자를 인증된 사용자로 만들어 줌. 만약 key가 만료되었다면 오류 메시지를 보냄.
+
+Request : 인증 key를 path variable로 전송함.
+
+Request example)
+
+```
+/member/verify/b4a375cb-41d3-4b78-8942-82b31e25ce41
+```
+
+Response : 통신 결과 및 메시지 리턴.
+
+Response example)
+
+```json
+HTTP/1.1 200 Created
+{
+	"msg" : "Success" (string)
+}
+
+HTTP/1.1 404 NOT FOUND
+{
+"timestamp": "2021-09-17T17:42:27.0850648" (datetime),
+"status": 404 (number),
+"error": "NOT_FOUND" (string),
+"code": "LINK_NOT_EXIST" (string),
+"msg": "인증 메일 링크가 존재하지 않습니다." (string)
+}
+```
+
+Returns:
+
+- 404 NOT FOUND (link not exist)
 
 
 <br>
@@ -145,12 +189,12 @@ Response example)
 ```json
 HTTP/1.1 200 OK
 {
-	"id": "user1",
-	"name": "사용자1",
-	"user_role": "ROLE_USER",
-	"license" : true,
-	"phone_number": "0102372666",
-	"company_name": "삼성"
+	"id": "user1" (string),
+	"name": "사용자1" (string),
+	"user_role": "ROLE_USER" (string),
+	"license" : true (boolean),
+	"email" : "asdf@asdf.com" (string),
+	"company_name": "삼성" (string)
 }
 
 HTTP/1.1 404 Not Found
@@ -207,7 +251,7 @@ HTTP/1.1 200 OK
 	"name": "사용자1",
 	"userRole": "ROLE_USER",
 	"license" : true,
-	"phoneNumber": "0102372666",
+	"email" : "asdf@asdf.com" (string),
 	"customerCompanyName": "삼성",
 }
 
@@ -255,16 +299,16 @@ Returns:
 
 Method : **POST**
 
-Description : 클라이언트가 휴대폰 번호를 전송하면 서버에서 해당 휴대폰 번호의 유무를 검사한 후 해당하는 아이디를 휴대폰 메시지로 날려줌.
+Description : 클라이언트가 이메일를 전송하면 서버에서 해당 이메일의 유무를 검사한 후 해당하는 아이디를 이메일로 날려줌.
 
-Request : 휴대폰 번호를 POST로 전송함.
+Request : 이메일를 POST로 전송함.
 
 Request example)
 
 ```json
 http body
 {
-  "phone_number" : "01012345678" (string)
+  "email" : "asdf@asdf.com" (string),
 }
 ```
 
@@ -283,15 +327,15 @@ HTTP/1.1 404 Not Found
 	"timestamp": "2021-08-09T21:53:01.1151735" (datetime),
 	"status": 404 (number),
 	"error": "NOT_FOUND" (string),
-	"code": "PHONE_NUMBER_NOT_EXIST" (string),
-	"msg": "휴대폰 번호가 존재하지 않습니다." (string)
+	"code": "EMAIL_NUMBER_NOT_EXIST" (string),
+	"msg": "이메일이 존재하지 않습니다." (string)
 }
 ```
 
 Returns:
 
 - 200 OK (Success)
-- 404 Not Found (phone number does not exist)
+- 404 Not Found (email number does not exist)
 
 <br>
 
@@ -301,16 +345,16 @@ Returns:
 
 Method : **POST**
 
-Description : 클라이언트가 휴대폰 번호를 전송하면 서버에서 해당 휴대폰 번호의 유무를 검사한 후 해당하는 비밀번호를 임의로 바꾼 후 휴대폰 메시지로 날려줌.
+Description : 클라이언트가 이메일를 전송하면 서버에서 해당 이메일의 유무를 검사한 후 해당하는 비밀번호를 임의로 바꾼 후 이메일로 날려줌.
 
-Request : 휴대폰 번호를 POST로 전송함.
+Request : 이메일을 POST로 전송함.
 
 Request example)
 
 ```json
 http body
 {
-  "phone_number" : "01012345678" (string)
+  "email" : "asdf@asdf.com" (string)
 }
 ```
 
@@ -329,15 +373,15 @@ HTTP/1.1 404 Not Found
 	"timestamp": "2021-08-09T21:53:01.1151735" (datetime),
 	"status": 404 (number),
 	"error": "NOT_FOUND" (string),
-	"code": "PHONE_NUMBER_NOT_EXIST" (string),
-	"msg": "휴대폰 번호가 존재하지 않습니다." (string)
+	"code": "EMAIL_NUMBER_NOT_EXIST" (string),
+	"msg": "이메일이 존재하지 않습니다." (string)
 }
 ```
 
 Returns:
 
 - 200 OK (Success)
-- 404 Not Found (phone number does not exist)
+- 404 Not Found (email) number does not exist)
 
 <br>
 
@@ -366,7 +410,7 @@ http body
 Response : 면허 코드, 결과, 의미 리턴, 실패 시 실패 사유 리턴.
 
 응답 예시) - > 굳이 API로 안쓰고 직접 요청해도 될 듯.
-
+f
 ```json
 HTTP/1.1 200 OK
 {
@@ -410,16 +454,17 @@ Returns:
 
 Method : **POST**
 
-Description : 클라이언트가 새로운 비밀번호를 전송하면 서버에서 헤더에 있는 아이디에 해당하는 사용자의 비밀번호를 변경함.
+Description : 클라이언트가 기존 비밀번호와 새로운 비밀번호를 전송하면 서버에서 헤더에 있는 아이디에 해당하는 사용자의 비밀번호를 변경함.
 
-Request : 사용자의 정보가 담긴 Authorization header, 새 비밀번호를 POST로 전송함.
+Request : 사용자의 정보가 담긴 Authorization header, 기존 비밀번호, 새 비밀번호를 POST로 전송함.
 
 Request example)
 
 ```json
 http body
 {
-  "password" : "qwerty" (string)
+"new_password" : "qwerty" (string)
+  "old_password" : "qwerty" (string)
 }
 ```
 
@@ -447,8 +492,8 @@ HTTP/1.1 404 Not Found
 	"timestamp": "2021-08-09T21:53:01.1151735" (datetime),
 	"status": 404 (number),
 	"error": "NOT_FOUND" (string),
-	"code": "PHONE_NUMBER_NOT_EXIST" (string),
-	"msg": "휴대폰 번호가 존재하지 않습니다." (string)
+	"code": "EMAIL_NUMBER_NOT_EXIST" (string),
+	"msg": "이메일이 존재하지 않습니다." (string)
 }
 ```
 
@@ -456,6 +501,6 @@ Returns:
 
 - 200 OK (Success)
 - 401 Unauthorized (user status logout)
-- 404 Not Found (phone number does not exist)
+- 404 Not Found (email number does not exist)
 
 <br>
