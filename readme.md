@@ -1,4 +1,6 @@
-# API 목록
+# Bizkicks API 명세
+
+Bizkicks 서비스의 API 명세를 위한 리포지터리입니다.
 
 ## 계약관리
 
